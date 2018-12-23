@@ -20,6 +20,5 @@ http://localhost:8010/films
 ```
 
 ### To do:
-* Add rest functionality for get / post / delete
 * Add rest controller tests
 * Add web page

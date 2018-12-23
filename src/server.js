@@ -2,6 +2,7 @@
 
 const {createServer} = require("http");
 const Router = require("./router");
+const isEqual = require('lodash.isequal');
 
 const router = new Router();
 let defaultHeaders = {"Content-Type": "text/plain"};
@@ -68,6 +69,21 @@ router.add("POST", filmPath, async (server, request) => {
     return {status: 400, body: "Bad comment data"};
   } else {
     server.films.push(film);
+    return {status: 201};
+  }
+});
+
+router.add("DELETE", filmPath, async (server, request) => {
+  let requestBody = await readStream(request);
+  let film;
+  try { film = JSON.parse(requestBody); }
+  catch (_) { return {status: 400, body: "Invalid JSON"}; }
+
+  if (!film) {
+    return {status: 400, body: "Bad comment data"};
+  } else {
+    // let filteredFilms = server.films.filter(elem => JSON.stringify(elem) != JSON.stringify(film));
+    server.films = server.films.filter(elem => ! isEqual(elem, film));
     return {status: 204};
   }
 });

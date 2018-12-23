@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jasonsoooz/films-node/issues"
   },
-  "homepage": "https://github.com/jasonsoooz/films-node#readme"
+  "homepage": "https://github.com/jasonsoooz/films-node#readme",
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
+  }
 }
