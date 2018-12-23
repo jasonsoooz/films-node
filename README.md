@@ -11,7 +11,7 @@ Using simple javascript on front end for now.  Eventually replace with React.js,
 
 Run the app:
 ```
-Run server.js
+npm start
 ```
 
 Access the app:
