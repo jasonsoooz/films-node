@@ -6,6 +6,7 @@ const Router = require("./router");
 const router = new Router();
 let defaultHeaders = {"Content-Type": "text/plain"};
 
+
 class WebServer {
   constructor() {
     this.films = [];
@@ -38,12 +39,37 @@ class WebServer {
   }
 }
 
+
+function readStream(stream) {
+  return new Promise((resolve, reject) => {
+      let data = "";
+      stream.on("error", reject);
+      stream.on("data", chunk => data += chunk.toString());
+      stream.on("end", () => resolve(data));
+  });
+}
+
 // const filmPath = /^\/films\/([^\/]*)$/;
 const filmPath = /films/;
 
 router.add("GET", filmPath, async (server) => {
   return {body: JSON.stringify(server.films),
           headers: {"Content-Type": "application/json"}};
+});
+
+// curl -d '{"year":2004,"title":"Spiderman 2","imdbRating":7.3,"director":"Sam Raimi"}' -H "Content-Type: application/json" -X POST http://localhost:8010/films
+router.add("POST", filmPath, async (server, request) => {
+  let requestBody = await readStream(request);
+  let film;
+  try { film = JSON.parse(requestBody); }
+  catch (_) { return {status: 400, body: "Invalid JSON"}; }
+
+  if (!film) {
+    return {status: 400, body: "Bad comment data"};
+  } else {
+    server.films.push(film);
+    return {status: 204};
+  }
 });
 
 new WebServer().start(8010);
